@@ -42,4 +42,6 @@ interpret (const char * inst) {
             case ']': if ( *tape_ptr ) { inst = c; } else { return inst + 1; }; break;
         }
     }
+
+    return 0;
 }
