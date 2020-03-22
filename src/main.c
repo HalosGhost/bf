@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
 
-static uint8_t * tape = 0;
 static uint8_t * tape_ptr = 0;
-static size_t TAPE_LENGTH = 30000;
 
 const char *
 interpret(const char *);
@@ -16,15 +15,17 @@ interpret(const char *);
 signed
 main (void) {
 
-    tape = calloc(TAPE_LENGTH, sizeof (uint8_t));
+    size_t TAPE_LENGTH = 30000;
+    uint8_t * tape = calloc(TAPE_LENGTH, sizeof (uint8_t));
     if ( !tape ) {
         return EXIT_FAILURE;
     }
 
     tape_ptr = tape;
 
+    const char * p = isatty(fileno(stdin)) ? "bf: " : "";
     char * input;
-    while ( (input = readline("bf: ")) ) {
+    while ( (input = readline(p)) ) {
         add_history(input);
         interpret(input);
         free(input);
